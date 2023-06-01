@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    #quiz-container {
+      width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+    }
+
+    #question-container {
+      display: none;
+    }
+
+    #question {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .option-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    #result {
+      display: none;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    #submit-button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <h1>Quiz</h1>
+    <button id="start-button">Commencer</button>
+  </div>
+
+  <div id="question-container">
+    <h2 id="question"></h2>
+    <div id="options"></div>
+    <div id="result"></div>
+    <div id="explanation"></div>
+  </div>
+
+  <script>
+    var quizQuestions = [
+      {
+        question: "Quelle est la définition de l'égalité homme-femme?",
+        options: [
+          "Le fait que les hommes et les femmes soient identiques en tout point.",
+          "Le principe selon lequel hommes et femmes doivent avoir les mêmes droits et opportunités.",
+          "L'idée que les femmes doivent être supérieures aux hommes."
+        ],
+        correctAnswer: 1,
+        explanation: "L'égalité homme-femme signifie que hommes et femmes doivent avoir les mêmes droits et opportunités."
+      },
+      {
+        question: "Quel mouvement féministe a émergé aux États-Unis à la fin du XIXe siècle et a lutté pour le droit de vote des femmes?",
+        options: [
+          "Le mouvement des Suffragettes.",
+          "Le mouvement des Amazones.",
+          "Le mouvement des Égalitaires."
+        ],
+        correctAnswer: 0,
+        explanation: "Le mouvement des Suffragettes a lutté pour le droit de vote des femmes."
+      },
+      {
+        question: "Quelle est la date de la première Convention mondiale des femmes qui s'est tenue à Seneca Falls, aux États-Unis?",
+        options: [
+          "1848.",
+          "1901.",
+          "1950."
+        ],
+        correctAnswer: 0,
+        explanation: "La première Convention mondiale des femmes s'est tenue à Seneca Falls, aux États-Unis, en 1848."
+      },
+      {
+        question: "Quel événement a marqué un tournant dans le mouvement des droits des femmes en France en 1970?",
+        options: [
+          "La première Journée internationale des femmes.",
+          "L’interpellation d’une dizaine de jeunes femmes à Paris.",
+          "La première grève des femmes."
+        ],
+        correctAnswer: 1,
+        explanation: "L’interpellation d’une dizaine de jeunes femmes à Paris en 1970 a marqué un tournant dans le mouvement des droits des femmes en France."
+      },
+      {
+        question: "Quel est le traité international adopté en 1979 par l'Assemblée générale des Nations Unies qui vise à éliminer la discrimination à l'égard des femmes?",
+        options: [
+          "La Convention de Genève.",
+          "La Convention de Vienne.",
+          "La Convention sur l'élimination de toutes les formes de discrimination à l’égard des femmes (CEDAW)."
+        ],
+        correctAnswer: 2,
+        explanation: "La Convention sur l'élimination de toutes les formes de discrimination à l’égard des femmes (CEDAW) a été adoptée en 1979 par l'Assemblée générale des Nations Unies."
+      },
+      {
+        question: "Dans quel domaine l'égalité homme-femme est-elle particulièrement importante?",
+        options: [
+          "L'éducation.",
+          "L'industrie du divertissement.",
+          "L'armée."
+        ],
+        correctAnswer: 0,
+        explanation: "L'égalité homme-femme est particulièrement importante dans le domaine de l'éducation."
+      },
+      {
+        question: "Quel est le pourcentage de femmes occupant des postes de direction dans les entreprises du classement Fortune 500 en 2020?",
+        options: [
+          "Moins de 10%.",
+          "Environ 30%.",
+          "Plus de 50%."
+        ],
+        correctAnswer: 0,
+        explanation: "Moins de 10% des postes de direction dans les entreprises du classement Fortune 500 étaient occupés par des femmes en 2020."
+      },
+      {
+        question: "Quel domaine a été traditionnellement dominé par les hommes, mais où les femmes ont fait des progrès significatifs ces dernières décennies?",
+        options: [
+          "La politique.",
+          "La médecine.",
+          "Les sciences et technologies."
+        ],
+        correctAnswer: 0,
+        explanation: "La politique a été traditionnellement dominée par les hommes, mais les femmes ont fait des progrès significatifs ces dernières décennies."
+      },
+      {
+        question: "Dans quel domaine les écarts salariaux entre hommes et femmes sont-ils les plus importants?",
+        options: [
+          "L'éducation.",
+          "Le secteur des soins de santé.",
+          "L'industrie informatique."
+        ],
+        correctAnswer: 0,
+        explanation: "Les écarts salariaux entre hommes et femmes sont les plus importants dans le domaine de l'éducation."
+      },
+      {
+        question: "Quel est le concept qui met l'accent sur la nécessité d'intégrer la perspective des femmes et des hommes dans toutes les politiques et décisions?",
+        options: [
+          "L'égalité des chances.",
+          "La parité.",
+          "L'intégration du genre."
+        ],
+        correctAnswer: 0,
+        explanation: "L'égalité des chances met l'accent sur la nécessité d'intégrer la perspective des femmes et des hommes dans toutes les politiques et décisions."
+      },
+      {
+        question: "Dans quel domaine les femmes sont-elles souvent sous-représentées en politique?",
+        options: [
+          "Les relations internationales.",
+          "La justice.",
+          "La diplomatie."
+        ],
+        correctAnswer: 2,
+        explanation: "Les femmes sont souvent sous-représentées dans le domaine de la diplomatie en politique."
+      },
+      {
+        question: "Quel pays a été le premier à accorder le droit de vote aux femmes en 1893?",
+        options: [
+          "La France.",
+          "Le Royaume-Uni.",
+          "La Nouvelle-Zélande."
+        ],
+        correctAnswer: 2,
+        explanation: "La Nouvelle-Zélande a été le premier pays à accorder le droit de vote aux femmes en 1893."
+      },
+      {
+        question: "Quelle est la profession où les femmes sont souvent confrontées à des stéréotypes de genre et à une sous-représentation?",
+        options: [
+          "L'enseignement.",
+          "L'ingénierie.",
+          "La comptabilité."
+        ],
+        correctAnswer: 1,
+        explanation: "L'ingénierie est la profession où les femmes sont souvent confrontées à des stéréotypes de genre et à une sous-représentation."
+      },
+      {
+        question: "Quel domaine est souvent associé à la division traditionnelle des rôles entre hommes et femmes?",
+        options: [
+          "Le sport.",
+          "La parentalité.",
+          "Les arts."
+        ],
+        correctAnswer: 0,
+        explanation: "Le sport est souvent associé à la division traditionnelle des rôles entre hommes et femmes."
+      },
+      {
+        question: "Quelle est l'organisation internationale qui œuvre spécifiquement pour promouvoir l'égalité homme-femme et les droits des femmes?",
+        options: [
+          "L'UNESCO.",
+          "L'OMS.",
+          "CSW"
+        ],
+        correctAnswer: 2,
+        explanation: "CSW (Commission de la condition de la femme) est l'organisation internationale qui œuvre spécifiquement pour promouvoir l'égalité homme-femme et les droits des femmes."
+      },
+      {
+        question: "Quel est le pays où les femmes ont obtenu le droit de vote le plus tardivement, en 1971?",
+        options: [
+          "La Suisse.",
+          "L'Afrique du Sud.",
+          "L'Inde."
+        ],
+        correctAnswer: 0,
+        explanation: "La Suisse est le pays où les femmes ont obtenu le droit de vote le plus tardivement, en 1971."
+      },
+      {
+        question: "Quel est le domaine où l'égalité homme-femme est souvent remise en question en raison de stéréotypes liés à la sexualité?",
+        options: [
+          "La santé mentale.",
+          "La sexualité.",
+          "Les droits de reproduction."
+        ],
+        correctAnswer: 1,
+        explanation: "L'égalité homme-femme est souvent remise en question dans le domaine de la sexualité en raison de stéréotypes liés à la sexualité."
+      },
+      {
+        question: "Quel est le terme qui désigne une discrimination systématique envers les femmes basée sur le genre?",
+        options: [
+          "La misogynie.",
+          "Le sexisme.",
+          "La discrimination sexuelle."
+        ],
+        correctAnswer: 1,
+        explanation: "Le sexisme désigne une discrimination systématique envers les femmes basée sur le genre."
+      },
+      {
+        question: "Quelle est la campagne mondiale lancée par l'ONU pour mettre fin à la violence à l'égard des femmes?",
+        options: [
+          "HeForShe.",
+          "Orange Day.",
+          "16 Days of Activism Against Gender-Based Violence."
+        ],
+        correctAnswer: 2,
+        explanation: "La campagne mondiale lancée par l'ONU pour mettre fin à la violence à l'égard des femmes est appelée '16 Days of Activism Against Gender-Based Violence'."
+      },
+      {
+        question: "Quel est le concept qui désigne les préjugés et les discriminations envers les personnes LGBTQ+?",
+        options: [
+          "La xénophobie.",
+          "L'homophobie.",
+          "La transphobie."
+        ],
+        correctAnswer: 1,
+        explanation: "L'homophobie désigne les préjugés et les discriminations envers les personnes LGBTQ+."
+      },
+      {
+        question: "Quel est le terme qui désigne la représentation équilibrée des femmes et des hommes dans toutes les sphères de la société?",
+        options: [
+          "La parité.",
+          "L'équité.",
+          "La diversité."
+        ],
+        correctAnswer: 0,
+        explanation: "La parité désigne la représentation équilibrée des femmes et des hommes dans toutes les sphères de la société."
+      }
+    ];
+
+    var currentQuestionIndex = 0;
+    var score = 0;
+
+    var startButton = document.getElementById("start-button");
+    var questionContainer = document.getElementById("question-container");
+    var questionElement = document.getElementById("question");
+    var optionsContainer = document.getElementById("options");
+    var resultElement = document.getElementById("result");
+    var explanationElement = document.getElementById("explanation");
+
+    startButton.addEventListener("click", startQuiz);
+
+    function startQuiz() {
+      startButton.style.display = "none";
+      questionContainer.style.display = "block";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      var question = quizQuestions[currentQuestionIndex];
+      questionElement.textContent = question.question;
+      optionsContainer.innerHTML = "";
+
+      for (var i = 0; i < question.options.length; i++) {
+        var option = document.createElement("button");
+        option.classList.add("option-button");
+        option.textContent = question.options[i];
+        option.addEventListener("click", selectAnswer);
+        optionsContainer.appendChild(option);
+      }
+    }
+
+    function selectAnswer(event) {
+      var selectedButton = event.target;
+      var selectedAnswer = selectedButton.textContent;
+      var question = quizQuestions[currentQuestionIndex];
+      var explanation = question.explanation;
+
+      if (question.options[question.correctAnswer] === selectedAnswer) {
+        selectedButton.style.backgroundColor = "#4caf50";
+        score++;
+        resultElement.textContent = "Correct!";
+      } else {
+        selectedButton.style.backgroundColor = "#f44336";
+        resultElement.textContent = "Incorrect!";
+      }
+
+      explanationElement.textContent = explanation;
+      resultElement.style.display = "block";
+      explanationElement.style.display = "block";
+
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < quizQuestions.length) {
+        setTimeout(showQuestion, 1000);
+      } else {
+        showScore();
+      }
+    }
+
+    function showScore() {
+      questionContainer.style.display = "none";
+      resultElement.style.display = "none";
+      explanationElement.style.display = "none";
+
+      var scorePercentage = (score / quizQuestions.length) * 100;
+      var message = "Votre score est de " + score + "/" + quizQuestions.length + " (" + scorePercentage + "%).";
+
+      var scoreElement = document.getElementById("score");
+      scoreElement.textContent = message;
+      scoreElement.style.display = "block";
+    }
+  </script>
+</body>
+
+</html>
